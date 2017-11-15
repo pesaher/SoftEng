@@ -7,6 +7,8 @@
 #include <math.h>
 #include <list>
 #include <iterator>
+#include "Character.h"
+#include "Bullet.h"
 
 #define ESC 27
 #define LEFT 'a'
@@ -21,16 +23,15 @@
 #define MUSHROOM "M"
 #define RAIN "'"
 
-const int size = 90;
+const int size = 80;
 const char rain = 20;
 
 int main() {
-	unsigned char position = 50;
+	CCharacter character(2, 40);
 	char mushroom          = -1;
 	unsigned int score     = 0;
-	char lives             = 2;
 	std::list<char> enemies;
-	std::list<char> bullets;
+	std::list<CBullet> bullets;
 	std::list<char> directions;
 
 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -46,18 +47,18 @@ int main() {
 		//INPUT
 		if (_kbhit()) {
 			char pressed = _getch();
-			if (pressed == RIGHT && position < size - 1)
-				position++;
-			else if (pressed == LEFT && position > 0)
-				position--;
+			if (pressed == RIGHT && character.GetPosition() < size - 1)
+				character.MoveRight();
+			else if (pressed == LEFT && character.GetPosition() > 0)
+				character.MoveLeft();
 			else if (pressed == SHOOT_LEFT) {
-				bullets.push_back(position);
-				directions.push_back(-1);
+				CBullet bullet(character.GetPosition(), -1);
+				bullets.push_back(bullet);
 				score -= score >= 10 ? 10 : 0;
 			}
 			else if (pressed == SHOOT_RIGHT) {
-				bullets.push_back(position);
-				directions.push_back(1);
+				CBullet bullet(character.GetPosition(), 1);
+				bullets.push_back(bullet);
 				score -= score >= 10 ? 10 : 0;
 			}
 			else if (pressed == ESC)
@@ -70,10 +71,10 @@ int main() {
 			enemies.push_back((rand() % 2) ? -1 : size);
 		//Make mushroom possibly appear if not present
 		if((rand() % 2) && (mushroom < 0))
-			mushroom = rand() % 50;
+			mushroom = rand() % size;
 		//Make enemies move
 		for(auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
-			*enemy += (*enemy > position) ? -1 : 1;
+			*enemy += (*enemy > character.GetPosition()) ? -1 : 1;
 		//Make bullets move
 		for(auto bullet = bullets.begin(), direction = directions.begin(); bullet != bullets.end(); )
 			if(*bullet >= 0 && *bullet < size){
@@ -102,15 +103,15 @@ int main() {
 				enemy++;
 		}
 		//Eat mushroom
-		if(position == mushroom){
+		if(character.GetPosition() == mushroom){
 			mushroom = -1;
 			score = static_cast<int>(ceil(score * 1.1f));
 		}
 		//Let enemy kill you
 		for(auto enemy = enemies.begin(); enemy != enemies.end(); )
-			if(*enemy >= position - 1 && *enemy <= position + 1){
-				if(lives > 0){
-					lives--;
+			if(*enemy >= character.GetPosition() - 1 && *enemy <= character.GetPosition() + 1){
+				if(character.GetLives() > 0){
+					character.LoseLife();
 					enemy = enemies.erase(enemy);
 				}else{
 					printf("\n\n  ________.__  __                      .___\n /  _____/|__|/  |_     ____  __ __  __| _/\n/   \\  ___|  \\   __\\   / ___\\|  |  \\/ __ | \n\\    \\_\\  \\  ||  |    / /_/  >  |  / /_/ | \n \\______  /__||__|    \\___  /|____/\\____ | \n        \\/           /_____/            \\/ \n\n");
@@ -130,7 +131,7 @@ int main() {
 			auto bullet_iterator = std::find(bullets.begin(), bullets.end(), i);
 			if(bullet_iterator != bullets.end())
 				std::advance(iterator, (std::distance(bullets.begin(), std::find(bullets.begin(), bullets.end(), i))));
-			printf(i == position
+			printf(i == character.GetPosition()
 				?
 				CHARACTER
 				:
@@ -156,7 +157,7 @@ int main() {
 							:
 							BULLET_LEFT)));
 		}
-		printf(" LIVES: %u SCORE: %u", lives, score);
+		printf(" LIVES: %u SCORE: %u                   ", character.GetLives(), score);
 		Sleep(20);
 	}
 	return 0;
