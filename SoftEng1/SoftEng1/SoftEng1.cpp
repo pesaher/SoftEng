@@ -28,6 +28,7 @@ int main() {
 	unsigned char position = 50;
 	char mushroom          = -1;
 	unsigned int score     = 0;
+	char lives             = 3;
 	std::list<char> enemies;
 	std::list<char> bullets;
 	std::list<char> directions;
@@ -52,10 +53,12 @@ int main() {
 			else if (pressed == SHOOT_LEFT) {
 				bullets.push_back(position);
 				directions.push_back(-1);
+				score -= score >= 10 ? 10 : 0;
 			}
 			else if (pressed == SHOOT_RIGHT) {
 				bullets.push_back(position);
 				directions.push_back(1);
+				score -= score >= 10 ? 10 : 0;
 			}
 			else if (pressed == ESC)
 				return 0;
@@ -104,13 +107,19 @@ int main() {
 			score = static_cast<int>(ceil(score * 1.1f));
 		}
 		//Let enemy kill you
-		for(auto enemy = enemies.begin(); enemy != enemies.end(); enemy++)
-			if(*enemy >= position - 1 && *enemy <= position + 1) {
-				printf("\n\n  ________.__  __                      .___\n /  _____/|__|/  |_     ____  __ __  __| _/\n/   \\  ___|  \\   __\\   / ___\\|  |  \\/ __ | \n\\    \\_\\  \\  ||  |    / /_/  >  |  / /_/ | \n \\______  /__||__|    \\___  /|____/\\____ | \n        \\/           /_____/            \\/ \n\n");
-				system("PAUSE");
-				system("PAUSE");
-				return -1;
-			}
+		for(auto enemy = enemies.begin(); enemy != enemies.end(); )
+			if(*enemy >= position - 1 && *enemy <= position + 1){
+				if(lives > 0){
+					lives--;
+					enemy = enemies.erase(enemy);
+				}else{
+					printf("\n\n  ________.__  __                      .___\n /  _____/|__|/  |_     ____  __ __  __| _/\n/   \\  ___|  \\   __\\   / ___\\|  |  \\/ __ | \n\\    \\_\\  \\  ||  |    / /_/  >  |  / /_/ | \n \\______  /__||__|    \\___  /|____/\\____ | \n        \\/           /_____/            \\/ \n\n");
+					system("PAUSE");
+					system("PAUSE");
+					return -1;
+				}
+			}else
+				enemy++;
 		//Increase score
 		score++;
 
@@ -147,7 +156,7 @@ int main() {
 							:
 							BULLET_LEFT)));
 		}
-		printf(" SCORE: %u", score);
+		printf(" LIVES: %u SCORE: %u", lives, score);
 		Sleep(20);
 	}
 	return 0;
