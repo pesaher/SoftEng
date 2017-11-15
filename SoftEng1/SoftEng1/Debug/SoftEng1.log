@@ -1,4 +1,4 @@
-﻿  stdafx.cpp
-  SoftEng1.cpp
+﻿  SoftEng1.cpp
+c:\users\pedro.sanz\source\repos\softeng1\softeng1\softeng1.cpp(40): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   SoftEng1.vcxproj -> C:\Users\pedro.sanz\source\repos\SoftEng1\Debug\SoftEng1.exe
   SoftEng1.vcxproj -> C:\Users\pedro.sanz\source\repos\SoftEng1\Debug\SoftEng1.pdb (Partial PDB)
