@@ -1,2 +1,11 @@
 
 *.obj
+*.db
+*.pdb
+*.ilk
+*.enc
+*.tlog
+*.idb
+*.pch
+*.log
+*.ipch
