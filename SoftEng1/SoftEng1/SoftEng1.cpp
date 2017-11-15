@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 #include <list>
+#include <iterator>
 
 #define ESC 27
 #define LEFT 'a'
@@ -115,8 +116,37 @@ int main() {
 
 		//PRINT
 		printf("\r");
-		for (char i = 0; i < size; i++)
-			printf(i == position ? CHARACTER : ((std::find(enemies.begin(), enemies.end(), i) != enemies.end()) ? ENEMY : (!(std::find(bullets.begin(), bullets.end(), i) != bullets.end()) ? (i == mushroom ? MUSHROOM : ((rand() % rain) ? FLOOR : RAIN)) : (direction > 0) ? BULLET_RIGHT : BULLET_LEFT)));
+		for(char i = 0; i < size; i++){
+			auto iterator = directions.begin();
+			auto bullet_iterator = std::find(bullets.begin(), bullets.end(), i);
+			if(bullet_iterator != bullets.end())
+				std::advance(iterator, (std::distance(bullets.begin(), std::find(bullets.begin(), bullets.end(), i))));
+			printf(i == position
+				?
+				CHARACTER
+				:
+				((std::find(enemies.begin(), enemies.end(), i) != enemies.end())
+					?
+					ENEMY
+					:
+					(!(std::find(bullets.begin(), bullets.end(), i) != bullets.end())
+						?
+						(i == mushroom
+							?
+							MUSHROOM
+							:
+							((rand() % rain)
+								?
+								FLOOR
+								:
+								RAIN))
+						:
+						((*iterator) > 0)
+							?
+							BULLET_RIGHT
+							:
+							BULLET_LEFT)));
+		}
 		printf(" SCORE: %u", score);
 		Sleep(20);
 	}
