@@ -21,14 +21,14 @@
 #define MUSHROOM "M"
 #define RAIN "'"
 
-const int size = 100;
+const int size = 90;
 const char rain = 20;
 
 int main() {
 	unsigned char position = 50;
 	char mushroom          = -1;
 	unsigned int score     = 0;
-	char lives             = 3;
+	char lives             = 2;
 	std::list<char> enemies;
 	std::list<char> bullets;
 	std::list<char> directions;
