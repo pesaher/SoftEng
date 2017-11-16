@@ -22,6 +22,11 @@ unsigned char CBullet::GetPosition()
 	return m_position;
 }
 
+char CBullet::GetDirection()
+{
+	return m_direction;
+}
+
 void CBullet::Move()
 {
 	m_position += m_direction;
