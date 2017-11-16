@@ -5,7 +5,7 @@
 
 CRainManager::CRainManager()
 {
-	m_rainField = NULL;
+	m_rainField = nullptr;
 	m_size = 0;
 	m_rainChance = 0;
 }
@@ -13,7 +13,7 @@ CRainManager::CRainManager()
 CRainManager::~CRainManager()
 {
 	delete[]m_rainField;
-	m_rainField = NULL;
+	m_rainField = nullptr;
 }
 CRainManager::CRainManager(unsigned int size, unsigned char rainChance)
 {
