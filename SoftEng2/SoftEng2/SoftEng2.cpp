@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <conio.h>
 #include <stdio.h>
 #include <windows.h>
@@ -17,29 +17,30 @@
 #define RIGHT              'd'
 #define SHOOT_LEFT         'j'
 #define SHOOT_RIGHT        'l'
-#define FLOOR              "_"
 #define CHARACTER          "X"
 #define ENEMY              "O"
 #define BULLET_LEFT        "<"
 #define BULLET_RIGHT       ">"
 #define MUSHROOM           "M"
-#define RAIN               "?"
+#define RAIN               "'"
 #define FOUND_NOTHING      0
 #define FOUND_BULLET_LEFT  -1
 #define FOUND_BULLET_RIGHT 1
 #define FOUND_ENEMY        2
 
-const unsigned int size = 100;
-const unsigned char rain = 20;
+const unsigned int  size       = 100;
+const unsigned char rainChance = 20;
 
 int main() {
-	char mushroom = -1;
-	unsigned int score = 0;
+	char         mushroom      = -1;
+	unsigned int score         = 0;
+	char         *charToString = new char[2];
 
-	CCharacter character(2, 40);
-	//CRainManager rain(size);
+	charToString[1] = 0;
 
-	std::list<CEnemy> enemies;
+	CCharacter         character(2, 50);
+	CRainManager       rain(size, rainChance);
+	std::list<CEnemy>  enemies;
 	std::list<CBullet> bullets;
 
 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -108,11 +109,6 @@ int main() {
 			if(!killed)
 				enemy++;
 		}
-		//Eat mushroom
-		if(character.GetPosition() == mushroom){
-			mushroom = -1;
-			score = static_cast<int>(ceil(score * 1.1f));
-		}
 		//Let enemy kill you
 		for(auto enemy = enemies.begin(); enemy != enemies.end(); )
 			if(enemy->GetPosition() >= character.GetPosition() - 1 && enemy->GetPosition() <= character.GetPosition() + 1){
@@ -123,10 +119,18 @@ int main() {
 					printf("\n\n  ________.__  __                      .___\n /  _____/|__|/  |_     ____  __ __  __| _/\n/   \\  ___|  \\   __\\   / ___\\|  |  \\/ __ | \n\\    \\_\\  \\  ||  |    / /_/  >  |  / /_/ | \n \\______  /__||__|    \\___  /|____/\\____ | \n        \\/           /_____/            \\/ \n\n");
 					system("PAUSE");
 					system("PAUSE");
+					delete []charToString;
 					return -1;
 				}
 			}else
 				enemy++;
+		//Eat mushroom
+		if (character.GetPosition() == mushroom) {
+			mushroom = -1;
+			score = static_cast<int>(ceil(score * 1.1f));
+		}
+		//Update rain
+		rain.UpdateRain();
 		//Increase score
 		score++;
 
@@ -134,6 +138,7 @@ int main() {
 		printf("\r");
 		for(unsigned int i = 0; i < size; i++){
 			char found = FOUND_NOTHING;
+			charToString[0] = rain.GetRain(i);
 			for(auto bullet = bullets.begin(); bullet != bullets.end(); bullet++)
 				if(bullet->GetPosition() == i){
 					found = bullet->GetDirection();
@@ -159,11 +164,7 @@ int main() {
 							?
 							MUSHROOM
 							:
-							((rand() % rain)
-								?
-								FLOOR
-								:
-								RAIN))
+							charToString)
 						:
 						((found == FOUND_BULLET_RIGHT)
 							?
