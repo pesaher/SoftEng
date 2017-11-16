@@ -10,6 +10,7 @@
 #include "Character.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "RainManager.h"
 
 #define ESC                27
 #define LEFT               'a'
@@ -22,7 +23,7 @@
 #define BULLET_LEFT        "<"
 #define BULLET_RIGHT       ">"
 #define MUSHROOM           "M"
-#define RAIN               "'"
+#define RAIN               "?"
 #define FOUND_NOTHING      0
 #define FOUND_BULLET_LEFT  -1
 #define FOUND_BULLET_RIGHT 1
@@ -36,7 +37,7 @@ int main() {
 	unsigned int score = 0;
 
 	CCharacter character(2, 40);
-	CRainManager rain(size);
+	//CRainManager rain(size);
 
 	std::list<CEnemy> enemies;
 	std::list<CBullet> bullets;
