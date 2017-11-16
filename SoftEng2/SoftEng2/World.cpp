@@ -42,9 +42,9 @@ CWorld::~CWorld()
 
 CWorld::CWorld(unsigned char lives, unsigned int size, unsigned char rainChance)
 {
-	m_lives         = lives;
-	m_size          = size;
-	m_rainChance    = rainChance;
+	m_lives           = lives;
+	m_size            = size;
+	m_rainChance      = rainChance;
 	m_mushroom        = -1;
 	m_score           = 0;
 	m_charToString    = new char[2];
