@@ -8,6 +8,7 @@ public:
 	~CBullet();
 
 	unsigned char GetPosition();
+	char GetDirection();
 	void Move();
 
 private:
