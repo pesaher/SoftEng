@@ -4,6 +4,17 @@
 #include <math.h>
 #include <windows.h>
 
+#define CHARACTER          "X"
+#define ENEMY              "O"
+#define BULLET_LEFT        "<"
+#define BULLET_RIGHT       ">"
+#define MUSHROOM           "M"
+#define RAIN               "'"
+#define FOUND_NOTHING      0
+#define FOUND_BULLET_LEFT  -1
+#define FOUND_BULLET_RIGHT 1
+#define FOUND_ENEMY        2
+
 CWorld::CWorld()
 {
 	m_lives           = 2;
